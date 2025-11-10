@@ -3,7 +3,7 @@ import DatePicker from "react-datepicker";
 
 export const SearchBox = () => {
   return (
-    <div className="flex flex-row bg-white shadow-md">
+    <div className="flex flex-row bg-white shadow-md px-7 rounded-full">
       <div className="flex flex-col gap-3 p-3 ">
         <select id="loc">
           <option value="Pickup Location" selected>
