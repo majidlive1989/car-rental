@@ -6,6 +6,9 @@ import { Header } from "./components/Header";
 import { SearchBox } from "./components/SearchBox";
 import Featured_Vehicles from "./components/Featured_Vehicles";
 import { List } from "./components/List";
+import Customer from "./components/Customer";
+import Subscription from "./components/Subscription";
+import Footer from "./components/Footer";
 
 function App() {
   return (
@@ -30,6 +33,15 @@ function App() {
       </div>
       <div>
         <List />
+      </div>
+      <div>
+        <Customer />
+      </div>
+      <div>
+        <Subscription />
+      </div>
+      <div className="pt-[200px]">
+        <Footer />
       </div>
     </>
   );
