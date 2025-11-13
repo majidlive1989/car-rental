@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "../api/axios";
 import clsx from "clsx";
+import { useQuery } from "@tanstack/react-query";
 
 type postsType = {
   brand: string;
@@ -22,17 +23,30 @@ type postsType = {
   _id: string;
 };
 
+interface CarsType {
+  cars: postsType[];
+  success: boolean;
+}
+
 const Featured_Vehicles = () => {
-  const [post, setPost] = useState<postsType[]>([]);
-  const getPost = async () => {
-    const { data } = await axios("/api/user/cars");
-    setPost(data.cars);
-  };
-  useEffect(() => {
-    getPost();
-  }, []);
+  const { isLoading, data, dataUpdatedAt, refetch } = useQuery({
+    queryKey: ["getCars"],
+    queryFn: async () => {
+      const { data } = await axios<CarsType>("/api/user/cars");
+      return data.cars;
+    },
+  });
+
   return (
     <div className="flex flex-col gap-20 px-6 py-24 bg-white">
+      <span>{new Date(dataUpdatedAt).toISOString()}</span>
+      <button
+        onClick={() => {
+          refetch();
+        }}
+      >
+        🔄
+      </button>
       <div className="flex flex-col gap-2 justify-center items-center">
         <p className="text-[36px] font-semibold">Featured Vehicles</p>
         <p className="text-center text-[14px] text-gray-500">
@@ -41,14 +55,18 @@ const Featured_Vehicles = () => {
         </p>
       </div>
       <div className="grid grid-cols-3 grid-rows-2 gap-4 ">
-        {post.slice(0, 6).map((item) => (
+        {data?.slice(0, 6)?.map((item) => (
           <div key={item._id} className="flex flex-col ">
             <div className="relative">
-              <img
-                className="rounded-t-2xl w-full h-[197px] object-cover"
-                src={item.image}
-                alt=""
-              />
+              {isLoading ? (
+                <div className="bg-gray-500 w-full h-[197px] rounded-md"></div>
+              ) : (
+                <img
+                  className="rounded-t-2xl w-full h-[197px] object-cover"
+                  src={item.image}
+                  alt=""
+                />
+              )}
               <p
                 className={clsx(
                   "absolute top-4 left-4 px-2 py-1 rounded-2xl text-white text-[12px]",
